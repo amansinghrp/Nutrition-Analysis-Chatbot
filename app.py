@@ -1,6 +1,8 @@
 import streamlit as st
 from PIL import Image
 from utils.nutritionx_api import fetch_nutrition_data
+import plotly.graph_objects as go
+
 # Page config
 st.set_page_config(page_title="Nutrition Analyzer & Chatbot", layout="wide")
 
@@ -27,6 +29,66 @@ if st.button("Analyze Nutrition"):
                 st.write(f"Carbs: {food['nf_total_carbohydrate']} g")
                 st.write(f"Fat: {food['nf_total_fat']} g")
                 st.write("---")
+            # Accumulators for total nutrients
+            total_calories = 0
+            total_protein = 0
+            total_fat = 0
+            total_carbs = 0
+
+            food_names = []
+            food_calories = []
+            food_proteins = []
+            food_carbs = []
+            food_fats = []
+
+            for food in data['foods']:
+                total_calories += food['nf_calories']
+                total_protein += food['nf_protein']
+                total_carbs += food['nf_total_carbohydrate']
+                total_fat += food['nf_total_fat']
+                
+                food_names.append(food['food_name'].title())
+                food_calories.append(food['nf_calories'])
+                food_proteins.append(food['nf_protein'])
+                food_carbs.append(food['nf_total_carbohydrate'])
+                food_fats.append(food['nf_total_fat'])
+                
+            # Pie chart for macronutrient distribution
+            st.subheader("🍩 Macronutrient Breakdown (Pie Chart)")
+
+            pie_fig = go.Figure(data=[go.Pie(labels=['Protein', 'Carbs', 'Fat'],
+                                            values=[total_protein, total_carbs, total_fat],
+                                            hole=0.4)])
+
+            st.plotly_chart(pie_fig, use_container_width=True)
+
+            # Bar chart for calorie per item
+            st.subheader("📊 Calories Per Food Item")
+
+            bar_fig = go.Figure(data=[go.Bar(x=food_names, y=food_calories, marker_color='indianred')])
+            bar_fig.update_layout(xaxis_title="Food Item", yaxis_title="Calories")
+
+            st.plotly_chart(bar_fig, use_container_width=True)
+            
+            #Protein per food
+            st.subheader("💪 Protein Per Food Item (g)")
+            protein_fig = go.Figure(data=[go.Bar(x=food_names, y=food_proteins, marker_color='seagreen')])
+            protein_fig.update_layout(xaxis_title="Food Item", yaxis_title="Protein (g)")
+            st.plotly_chart(protein_fig, use_container_width=True)
+            
+            #Carbs per food
+            st.subheader("🍞 Carbs Per Food Item (g)")
+            carbs_fig = go.Figure(data=[go.Bar(x=food_names, y=food_carbs, marker_color='dodgerblue')])
+            carbs_fig.update_layout(xaxis_title="Food Item", yaxis_title="Carbohydrates (g)")
+            st.plotly_chart(carbs_fig, use_container_width=True)
+
+            #Fat per food
+            st.subheader("🧈 Fats Per Food Item (g)")
+            fat_fig = go.Figure(data=[go.Bar(x=food_names, y=food_fats, marker_color='goldenrod')])
+            fat_fig.update_layout(xaxis_title="Food Item", yaxis_title="Fat (g)")
+            st.plotly_chart(fat_fig, use_container_width=True)
+
+
 
         except Exception as e:
             st.error(f"Error: {e}")
