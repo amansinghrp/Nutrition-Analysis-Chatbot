@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 from utils.nutritionx_api import fetch_nutrition_data
 import plotly.graph_objects as go
+from utils.chatbot import ask_nutrition_bot
 
 # Page config
 st.set_page_config(page_title="Nutrition Analyzer & Chatbot", layout="wide")
@@ -97,10 +98,19 @@ if st.button("Analyze Nutrition"):
 
 # --- Chatbot Section ---
 st.header("💬 Chat with Nutrition Bot")
+
 user_query = st.text_input("Ask a nutrition-related question")
+
 if st.button("Ask Bot"):
-    if user_query:
-        st.subheader("🤖 Bot Response")
-        st.info("Response will be generated using OpenAI GPT API.")
+    if user_query.strip():
+        with st.spinner("🤖 Thinking..."):
+            try:
+                response = ask_nutrition_bot(user_query)
+                st.markdown("### 🤖 Bot Response")
+                st.markdown(f"> {response}")
+            except Exception as e:
+                st.error(f"❌ {e}")
     else:
-        st.error("Please enter a question for the chatbot.")
+        st.warning("Please enter a question for the chatbot.")
+
+
