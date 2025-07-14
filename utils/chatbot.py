@@ -13,9 +13,8 @@ fallbacks = [
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# Optional (for usage tracking on openrouter.ai rankings)
-SITE_URL = "http://localhost"      # Change to your site if deployed
-SITE_TITLE = "Nutrition Chatbot"   # Custom project name
+SITE_URL = "http://localhost"      
+SITE_TITLE = "Nutrition Chatbot"   
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL_NAME = "deepseek/deepseek-r1:free"
@@ -57,7 +56,7 @@ def ask_nutrition_bot(question, nutrition_info=None):
         return f"❌ API Error {response.status_code}: {response.text}"
 
 
-#  CLI Mode (optional testing from terminal)
+##  CLI Mode (optional testing from terminal)
 # if __name__ == "__main__":
 #     print("💬 Nutrition Bot (DeepSeek via OpenRouter)")
 #     print("Type 'exit' to quit\n")
