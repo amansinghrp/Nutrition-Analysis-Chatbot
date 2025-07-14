@@ -18,10 +18,6 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "nutrition_summary" not in st.session_state:
     st.session_state.nutrition_summary = ""
-if "total_values" not in st.session_state:
-    st.session_state.total_values = {}
-if "per_item_values" not in st.session_state:
-    st.session_state.per_item_values = {}
 if "nutrition_analyzed" not in st.session_state:
     st.session_state.nutrition_analyzed = False
 if "nutrition_data" not in st.session_state:
