@@ -2,7 +2,13 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
+import random
 
+fallbacks = [
+    "🤖 Hmm, I didn't catch that. Mind trying again?",
+    "⚠️ Looks like I lost my train of thought. Could you rephrase that?",
+    "🙃 Something went wrong on my end. Try again?"
+]
 # Load your .env file
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
@@ -14,30 +20,41 @@ SITE_TITLE = "Nutrition Chatbot"   # Custom project name
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL_NAME = "deepseek/deepseek-r1:free"
 
-def ask_nutrition_bot(user_query):
+def ask_nutrition_bot(question, nutrition_info=None):
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": SITE_URL,
         "X-Title": SITE_TITLE
     }
+    context = "You are a helpful nutritionist. Respond with friendly and useful suggestions."
+
+    if nutrition_info:
+        context += f"\n\nHere is the user's current nutritional data:\n{nutrition_info}"
 
     payload = {
-        "model": MODEL_NAME,
+        "model": "deepseek/deepseek-r1:free",
         "messages": [
-            {"role": "system", "content": "You are a helpful nutritionist who gives clear, friendly and accurate advice about food, diet, and health."},
-            {"role": "user", "content": user_query}
+            {"role": "system", "content": context},
+            {"role": "user", "content": question}
         ],
         "temperature": 0.7,
-        "max_tokens": 500
+        "max_tokens": 2048
     }
 
     response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
 
     if response.status_code == 200:
-        return response.json()['choices'][0]['message']['content'].strip()
+        result = response.json()
+        try:
+            reply = result.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+            if not reply or len(reply) < 30:
+                return random.choice(fallbacks)
+            return reply
+        except (KeyError, IndexError):
+                return "⚠️ Unexpected response format from the model. Please try again."
     else:
-        raise Exception(f"OpenRouter API Error: {response.status_code}, {response.text}")
+        return f"❌ API Error {response.status_code}: {response.text}"
 
 
 #  CLI Mode (optional testing from terminal)
