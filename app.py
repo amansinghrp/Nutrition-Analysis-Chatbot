@@ -44,13 +44,18 @@ if analyze_button or st.session_state.nutrition_analyzed:
 
             st.subheader("🍽 Nutrition Analysis")
 
-            for food in data['foods']:
-                st.markdown(f"### 🥘 {food['food_name'].title()}")
-                st.write(f"Calories: {food['nf_calories']} kcal")
-                st.write(f"Protein: {food['nf_protein']} g")
-                st.write(f"Carbs: {food['nf_total_carbohydrate']} g")
-                st.write(f"Fat: {food['nf_total_fat']} g")
-                st.write("---")
+            # Convert to DataFrame
+            df_nutrition = pd.DataFrame([{
+                "Food Item": food['food_name'].title(),
+                "Calories (kcal)": food['nf_calories'],
+                "Protein (g)": food['nf_protein'],
+                "Carbs (g)": food['nf_total_carbohydrate'],
+                "Fat (g)": food['nf_total_fat']
+            } for food in data['foods']])
+
+            # Display table
+            st.subheader("🥘 Food Item Breakdown")
+            st.dataframe(df_nutrition, use_container_width=True)
 
             # Accumulators
             total_calories = sum(f['nf_calories'] for f in data['foods'])
