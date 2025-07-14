@@ -35,26 +35,29 @@ Used to connect to **DeepSeek R1** for nutrition-related chatbot queries.
 
 ### Step 1: Clone the repository
 
-git clone https://github.com/your-username/nutrition-analysis-chatbot.git
-cd nutrition-analysis-chatbot
+> git clone https://github.com/your-username/nutrition-analysis-chatbot.git
+
+> cd nutrition-analysis-chatbot
 
 
 ### Step 2: Create a .env file
 Create a .env file in the root directory:
 
-NUTRITIONIX_APP_ID=your_app_id_here
-NUTRITIONIX_API_KEY=your_nutritionix_key_here
-OPENROUTER_API_KEY=your_openrouter_key_here
+>NUTRITIONIX_APP_ID=your_app_id_here
+
+>NUTRITIONIX_API_KEY=your_nutritionix_key_here
+
+>OPENROUTER_API_KEY=your_openrouter_key_here
 
 
 ### Step 3: Install dependencies
 
-pip install -r requirements.txt
+>pip install -r requirements.txt
 
 
 ### Step 4: Run the application
 
-streamlit run app.py
+>streamlit run app.py
 
 
 ---
@@ -85,7 +88,7 @@ Python 3.10+
 
 ## 🔜 Future Work
 
-**text or image-based food input support**
+**Image-based food input support**
 
 ---
 ## 👤 Author
